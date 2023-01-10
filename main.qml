@@ -334,11 +334,13 @@ y:showRegion.height/2 - height/2
                 {
                     id: heightAnimationChecked
                     text: "Height"
+                    checked: true
                 }
                 LumenticCheckBox
                 {
                     id: widthAnimationChecked
                     text: "Width"
+                    checked: true
                 }
                 LumenticCheckBox
                 {

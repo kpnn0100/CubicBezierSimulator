@@ -4,5 +4,7 @@
         <file>XYSlider.qml</file>
         <file>LumenticLongButton.qml</file>
         <file>LumenticCheckBox.qml</file>
+        <file>LumenticSlider.qml</file>
+        <file>LumenticVerticalSlider.qml</file>
     </qresource>
 </RCC>

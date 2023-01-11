@@ -16,10 +16,12 @@ Window {
     property int gridCount:10
     property bool gridEnable: gridChecked.checked
     property bool startOfAnimation: true
-    property real animationDuration: 1000
+    property int animationDuration: durationSlider.finalValue*2500
 
 
-    Rectangle{
+    Row{
+        spacing:20
+        x:50
         y:parent.height/2 - bezierRegion.height/2
         Rectangle
         {
@@ -28,10 +30,13 @@ Window {
             width:200
             height:200
             color:grayBackGround
-            x:50
+
 
 
             clip: false
+            //duration slider
+
+
             //start end circle
             Rectangle
             {
@@ -84,7 +89,7 @@ Window {
             Text {
 
                 text: qsTr("time")
-                x:parent.width+5
+                x:parent.width-contentWidth
                 y:parent.height-contentHeight
                 color: grayShow
 
@@ -172,12 +177,38 @@ Window {
         }
         Rectangle
         {
+            width:40
+            height:200
+            color: "Transparent"
+            LumenticVerticalSlider
+            {
+                id: durationSlider
+                anchors.centerIn: parent
+            }
+        }
+        Rectangle
+        {
             id: showRegion
             width:200
             height:200
             color:grayBackGround
-            x:100+ bezierRegion.width
-
+            Rectangle
+            {
+                id:showButton
+                anchors.fill:parent
+                color: "Transparent"
+                LumenticLongButton
+                {
+                    anchors.bottom: parent.bottom
+                    anchors.margins: -40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text:"Show"
+                    onClicked:
+                    {
+                        startOfAnimation= !startOfAnimation;
+                    }
+                }
+            }
             Rectangle
             {
                 id: gridShow
@@ -247,32 +278,35 @@ Window {
                 property real finalHeight: 100
                 property real standardWidth: 20
                 property real finalWidth: 100
-                property real standardX: 0
-                property real finalX: 200
+                property real standardX: 40
+                property real finalX: 140
                 property real standardRadius: 0
-                property real finalRadius: 100
+                property real finalRadius: (finalWidth>finalHeight)? finalWidth/2:finalHeight/2
                 property real widthTemp: widthAnimationChecked.checked? ( startOfAnimation? standardWidth : finalWidth) : standardWidth
                 width:widthAnimationChecked.checked? ( startOfAnimation? standardWidth : finalWidth) : standardWidth
                 height: heightAnimationChecked.checked ? (startOfAnimation? standardHeight : finalHeight) : standardHeight
                 x: moveAnimationChecked.checked ? (startOfAnimation? -(widthTemp)/2+standardX : -widthTemp/2+finalX): showRegion.width/2-widthTemp/2
                 radius:radiusAnimationChecked.checked ? (startOfAnimation? standardRadius : finalRadius) : finalRadius
-y:showRegion.height/2 - height/2
-
+                y:showRegion.height/2 - height/2
+                property var bez: [endVector.valueX,endVector.valueY,startVector.valueX,startVector.valueY,1,1]
                 color: "Black"
                 Behavior on x
                 {
                     PropertyAnimation{
+
                         duration: animationDuration
                         easing.type: Easing.Bezier
-                        easing.bezierCurve: [endVector.valueX,endVector.valueY,startVector.valueX,startVector.valueY,1,1]
+                        easing.bezierCurve: handle.bez
                     }
                 }
                 Behavior on width
                 {
                     PropertyAnimation{
+                        onStarted: console.log(console.time())
+                        onFinished: console.log(console.time())
                         duration: animationDuration
                         easing.type: Easing.Bezier
-                        easing.bezierCurve: [endVector.valueX,endVector.valueY,startVector.valueX,startVector.valueY,1,1]
+                        easing.bezierCurve: handle.bez
                     }
                 }
                 Behavior on height
@@ -280,7 +314,7 @@ y:showRegion.height/2 - height/2
                     PropertyAnimation{
                         duration: animationDuration
                         easing.type: Easing.Bezier
-                        easing.bezierCurve: [endVector.valueX,endVector.valueY,startVector.valueX,startVector.valueY,1,1]
+                        easing.bezierCurve: handle.bez
                     }
                 }
                 Behavior on radius
@@ -288,7 +322,7 @@ y:showRegion.height/2 - height/2
                     PropertyAnimation{
                         duration: animationDuration
                         easing.type: Easing.Bezier
-                        easing.bezierCurve: [endVector.valueX,endVector.valueY,startVector.valueX,startVector.valueY,1,1]
+                        easing.bezierCurve: handle.bez
                     }
                 }
 
@@ -297,30 +331,14 @@ y:showRegion.height/2 - height/2
             }
         }
 
-        Rectangle
-        {
-            id:showButton
-            anchors.fill:showRegion
-            color: "Transparent"
-            LumenticLongButton
-            {
-                anchors.bottom: parent.bottom
-                anchors.margins: -40
-                anchors.horizontalCenter: parent.horizontalCenter
-                text:"Show"
-                onClicked:
-                {
-                    startOfAnimation= !startOfAnimation;
-                }
-            }
-        }
+
         Rectangle
         {
             id: optionRegion
             width:200
             height:200
             color:"Transparent"
-            x:100+ bezierRegion.width + showRegion.width+10
+
 
             Column
             {
@@ -358,5 +376,6 @@ y:showRegion.height/2 - height/2
 
 
     }
+
 
 }

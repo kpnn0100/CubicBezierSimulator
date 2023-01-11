@@ -13,13 +13,13 @@ Window {
     property color mainColor1: "#2bcbba"
     property color mainColor2: "#fed330"
     property real strokeWidth:1
-    property int gridCount:10
+    property int gridCount:5
     property bool gridEnable: gridChecked.checked
     property bool startOfAnimation: true
     property int animationDuration: durationSlider.finalValue*2500
 
-
     Row{
+
         spacing:20
         x:50
         y:parent.height/2 - bezierRegion.height/2
@@ -88,7 +88,7 @@ Window {
             }
             Text {
 
-                text: qsTr("time")
+                text: qsTr("Time: " +  (animationDuration/2500).toFixed(2))
                 x:parent.width-contentWidth
                 y:parent.height-contentHeight
                 color: grayShow
@@ -173,6 +173,39 @@ Window {
 
 
                 }
+                Rectangle
+                {
+                    anchors.fill: parent
+                    anchors.margins: -200
+                    layer.enabled: true
+                    layer.samples: 4
+                    antialiasing: true
+                    color:"Transparent"
+                    z:0
+                    opacity:0.5
+                    Shape {
+                        x: -parent.anchors.leftMargin
+                        y:-parent.anchors.topMargin
+                        z:1
+
+                        //BezierCurve
+                        ShapePath {
+                            strokeColor: grayShow;
+                            strokeWidth: 20
+
+                            fillColor: "Transparent"
+                            startX: 0; startY: bezierRegion.height
+
+                            PathCubic {
+                                x: bezierRegion.width; y: 0
+                                control2X: startVector.valueX*bezierRegion.width; control2Y: (1-startVector.valueY)*bezierRegion.height
+                                control1X: endVector.valueX*bezierRegion.width; control1Y: (1-endVector.valueY)*bezierRegion.height
+                            }
+                        }
+
+
+                    }
+                }
             }
         }
         Rectangle
@@ -182,6 +215,7 @@ Window {
             color: "Transparent"
             LumenticVerticalSlider
             {
+                defaultValue: 0.9
                 id: durationSlider
                 anchors.centerIn: parent
             }
@@ -224,7 +258,7 @@ Window {
                     {
                         model: gridCount
                         Rectangle {
-                            width: showRegion.width/10; height: showRegion.height
+                            width: showRegion.width/gridCount; height: showRegion.height
                             color:"Transparent"
                             Rectangle {
                                 anchors.right: parent.right
@@ -241,7 +275,7 @@ Window {
                     {
                         model: gridCount
                         Rectangle {
-                            height: showRegion.height/10; width: showRegion.width
+                            height: showRegion.height/gridCount; width: showRegion.width
                             color:"Transparent"
                             Rectangle {
                                 anchors.top: parent.top
